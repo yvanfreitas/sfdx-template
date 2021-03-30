@@ -1,6 +1,6 @@
 {
   "name": "sfdx-template",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.",
   "main": "index.js",
   "scripts": {

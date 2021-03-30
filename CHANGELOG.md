@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.2.0 (2021-03-30)
+
+
+### Features
+
+* codebase version metadata ([#15](https://github.com/yvanfreitas/sfdx-template/issues/15)) ([44d5858](https://github.com/yvanfreitas/sfdx-template/commit/44d585847cbdc7584041cb3b8da0073d8aa34029))
+
 ## 1.1.0 (2021-03-30)
 
 
