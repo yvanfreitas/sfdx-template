@@ -32,6 +32,9 @@ jobs:
             - name: Checking out Tag
               run: git checkout ${{github.event.inputs.tag}}
 
+            - name: Setting Code Version Metadata
+              run: sed -i -e 's/codebase_version/${{github.event.inputs.tag}}/g' ./src/main/metadata/customMetadata/OrgSettings.CODEBASE_VERSION.md-meta.xml
+
             # Run Salesforce CLI Scanner For Security checks
             - name: Scan For Security Exceptions
               run: 'sfdx scanner:run -c=Security -t=./force-app -f=json -v'
