@@ -39,9 +39,18 @@ jobs:
             - name: Auth in QA
               run: 'sfdx auth:jwt:grant --clientid ${{secrets.SF_CONSUMER_KEY_QA}} --jwtkeyfile assets/server.key --username ${{secrets.SF_USERNAME_QA}} --setalias qa  -r ${{secrets.SF_ENDPOINT_QA}} -s'
 
-            # Run tests in QA
+            # Deploy to QA
             - name: Run deploy in QA
-              run: timeout 60m sfdx force:source:deploy --checkonly --targetusername qa --wait 62 --testlevel RunLocalTests --sourcepath ./src
+              run: timeout 60m sfdx force:source:deploy --targetusername qa --wait 62 --testlevel RunLocalTests --sourcepath ./src
+
+            - run: git config --global user.email "you@example.com"
+            - run: git config --global user.name "Your Name"
+
+            - name: 'Generate Tag'
+              run: npx standard-version
+              
+            - name: 'Push Tag'
+              run: git push origin --tags
 
             - name: Slack Fail Notification
               if: failure()
