@@ -39,10 +39,6 @@ jobs:
             - name: Auth in QA
               run: 'sfdx auth:jwt:grant --clientid ${{secrets.SF_CONSUMER_KEY_QA}} --jwtkeyfile assets/server.key --username ${{secrets.SF_USERNAME_QA}} --setalias qa  -r ${{secrets.SF_ENDPOINT_QA}} -s'
 
-            # Login in QA
-            - name: Auth in QA
-              run: 'sfdx auth:jwt:grant --clientid ${{secrets.SF_CONSUMER_KEY_QA}} --jwtkeyfile assets/server.key --username ${{secrets.SF_USERNAME_QA}} --setalias qa  -r ${{secrets.SF_ENDPOINT_QA}} -s'
-    
             # Run tests in QA
             - name: Run deploy in QA
               run: timeout 60m sfdx force:source:deploy --checkonly --targetusername qa --wait 62 --testlevel RunLocalTests --sourcepath ./src
