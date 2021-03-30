@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.1.1 (2021-03-30)
+
+
+### Bug Fixes
+
+*  tag ([#11](https://github.com/yvanfreitas/sfdx-template/issues/11)) ([cc49b77](https://github.com/yvanfreitas/sfdx-template/commit/cc49b779d6b72c8706a900942c471c28f3cc583f))
+
 ## 1.1.0 (2021-03-30)
 
 
