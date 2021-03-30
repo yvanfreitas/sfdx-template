@@ -44,7 +44,7 @@ jobs:
               run: timeout 60m sfdx force:source:deploy --targetusername qa --wait 62 --testlevel RunLocalTests --sourcepath ./src
 
             - run: git config --global user.email "${{github.actor}}@user.com"
-            - run: git config --global user.name "${github.actor}}"
+            - run: git config --global user.name "${{github.actor}}"
 
             - name: 'Generate Tag'
               run: npx standard-version
