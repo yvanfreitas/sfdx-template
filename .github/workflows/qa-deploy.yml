@@ -1,0 +1,65 @@
+name: Deploy in QA
+
+# Definition when the workflow should run
+on:
+    push:
+        branches:
+            - main
+
+# Jobs to be executed
+jobs:
+    qa-deploy:
+        runs-on: ubuntu-latest
+        steps:
+            # Install Salesforce CLI
+            - name: Install Salesforce CLI
+              run: |
+                  wget https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
+                  mkdir sfdx-cli
+                  tar xJf sfdx-linux-amd64.tar.xz -C sfdx-cli --strip-components 1
+                  ./sfdx-cli/install
+            # Install Salesforce CLI Scanner
+            - name: Install Salesforce CLI Scanner
+              run: 'sfdx plugins:install @salesforce/sfdx-scanner'
+
+            # Checkout the code in the pull request
+            - name: 'Checkout source code'
+              uses: actions/checkout@v2
+
+            # Run Salesforce CLI Scanner For Security checks
+            - name: Scan For Security Exceptions
+              run: 'sfdx scanner:run -c=Security -t=./force-app -f=json -v'
+
+            # Decode the JWT Auth token
+            - name: Decode JWT Key
+              shell: bash
+              run: 'openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K ${{secrets.CERT_KEY}} -iv ${{secrets.CERT_IV}}'
+            
+            # Login in QA
+            - name: Auth in QA
+              run: 'sfdx auth:jwt:grant --clientid ${{secrets.SF_CONSUMER_KEY_QA}} --jwtkeyfile assets/server.key --username ${{secrets.SF_USERNAME_QA}} --setalias qa  -r ${{secrets.SF_ENDPOINT_QA}} -s'
+
+            # Run tests in QA
+            - name: Run deploy in QA
+              run: timeout 60m sfdx force:source:deploy --checkonly --targetusername qa --wait 62 --testlevel RunLocalTests --sourcepath ./src
+
+            - name: Slack Fail Notification
+              if: failure()
+              uses: rtCamp/action-slack-notify@v2
+              env:
+                SLACK_CHANNEL: notifs-sales
+                SLACK_COLOR: ${{ job.status }}
+                SLACK_TITLE:  O deploy para QA falhou!
+                SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+                SLACK_USERNAME: Evil Yvan
+                SLACK_ICON: https://emoji.slack-edge.com/T02HHA0JJ/happy-yvan-from-hell/e593b0123e382a62.png
+
+            - name: Slack Sucess Notification
+              uses: rtCamp/action-slack-notify@v2
+              env:
+                SLACK_CHANNEL: notifs-sales
+                SLACK_COLOR: ${{ job.status }}
+                SLACK_TITLE:  O deploy para QA foi feito com sucesso!
+                SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+                SLACK_USERNAME: Evil Yvan
+                SLACK_ICON: https://emoji.slack-edge.com/T02HHA0JJ/happy-yvan-from-hell/e593b0123e382a62.png
