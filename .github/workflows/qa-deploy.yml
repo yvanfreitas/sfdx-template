@@ -2,13 +2,13 @@ name: Deploy in QA
 
 # Definition when the workflow should run
 on:
-    push:
-        branches:
-            - main
+  pull_request:
+    types: [closed]
 
 # Jobs to be executed
 jobs:
     qa-deploy:
+        if: github.event.pull_request.merged == true
         runs-on: ubuntu-latest
         steps:
             # Install Salesforce CLI
