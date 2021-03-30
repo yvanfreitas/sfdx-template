@@ -46,7 +46,7 @@ jobs:
             - run: git config --global user.email "${{github.actor}}@user.com"
             - run: git config --global user.name "${{github.actor}}"
 
-            - name: 'Generate Tag'
+            - name: 'Generate Tag '
               run: npx standard-version
               
             - name: 'Push Tag'
